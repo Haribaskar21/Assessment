@@ -1,57 +1,76 @@
-Project Overview
+# 🚀 Full Stack Product Management Assessment
 
-This project consists of:
+A full-stack product management system built using **React, Express, and MySQL** with soft delete functionality and database-level restore protection.
 
-A reusable React table component with filtering and sorting.
+---
 
-A RESTful Express.js API for managing products.
+## 📌 Overview
 
-MySQL database with soft delete and restore functionality.
+This project includes:
 
-Database trigger to prevent restoring records deleted more than 30 days ago.
+- ✅ Reusable React table component with sorting and filtering
+- ✅ RESTful Express.js API
+- ✅ MySQL database integration
+- ✅ Soft delete functionality
+- ✅ Restore protection using MySQL trigger (30-day limit)
 
-Tech Stack
+---
 
-Frontend:
+## 🛠 Tech Stack
 
-React (Vite)
+### Frontend
+- React (Vite)
 
-Backend:
+### Backend
+- Node.js
+- Express.js
+- MySQL
+- mysql2
 
-Node.js
+---
 
-Express.js
+## 📂 Project Structure
 
-MySQL
+```
+assessment-fullstack/
+│
+├── client/        # React frontend
+└── server/        # Express backend
+```
 
-mysql2
+---
 
-Project Structure
-client/   -> React frontend
-server/   -> Express backend
+# ⚙️ Setup Instructions
 
-Setup Instructions
-1. Clone Repository
-git clone <repo-url>
+---
+
+## 1️⃣ Clone Repository
+
+```bash
+git clone <repository-url>
 cd assessment-fullstack
+```
 
-2. Setup Database
+---
 
-Login to MySQL:
+## 2️⃣ Database Setup
 
+### Login to MySQL
+
+```bash
 mysql -u root -p
+```
 
+### Create Database
 
-Create database:
-
+```sql
 CREATE DATABASE assessment_db;
 USE assessment_db;
+```
 
+### Create Products Table
 
-Run migration script:
-
-Copy and execute:
-
+```sql
 CREATE TABLE products (
   id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
@@ -60,10 +79,11 @@ CREATE TABLE products (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   deleted_at DATETIME NULL
 );
+```
 
+### Create Trigger (Prevent Restore After 30 Days)
 
-Create trigger:
-
+```sql
 DELIMITER $$
 
 CREATE TRIGGER prevent_restore
@@ -79,42 +99,108 @@ BEGIN
 END$$
 
 DELIMITER ;
+```
 
-3. Backend Setup
+🔒 This trigger ensures products deleted more than 30 days ago cannot be restored.
+
+---
+
+## 3️⃣ Backend Setup
+
+```bash
 cd server
 npm install
+```
 
+### Create `.env` file inside `server/`
 
-Create .env file:
-
+```
 PORT=5000
 DB_HOST=localhost
 DB_USER=root
 DB_PASSWORD=yourpassword
 DB_NAME=assessment_db
+```
 
+### Start Backend Server
 
-Start server:
-
+```bash
 node server.js
+```
 
-4. Frontend Setup
+Backend runs at:
+
+```
+http://localhost:5000
+```
+
+---
+
+## 4️⃣ Frontend Setup
+
+```bash
 cd client
 npm install
 npm run dev
+```
 
-API Endpoints
-Method	Endpoint	Description
-GET	/api/products	Fetch active products
-POST	/api/products	Create product
-PUT	/api/products/:id	Update product
-DELETE	/api/products/:id	Soft delete
-PUT	/api/products/:id/restore	Restore product
-Soft Delete Logic
+Frontend runs at:
 
-Products are not physically deleted. Instead, the deleted_at column is updated with the current timestamp. Active products are filtered using:
+```
+http://localhost:5173
+```
 
+---
+
+# 📡 API Endpoints
+
+| Method | Endpoint                       | Description                     |
+|--------|--------------------------------|---------------------------------|
+| GET    | `/api/products`                | Fetch active products           |
+| POST   | `/api/products`                | Create new product              |
+| PUT    | `/api/products/:id`            | Update product                  |
+| DELETE | `/api/products/:id`            | Soft delete product             |
+| PUT    | `/api/products/:id/restore`    | Restore soft-deleted product    |
+
+---
+
+# 🗑 Soft Delete Logic
+
+Products are **not permanently deleted**.
+
+Instead:
+- `deleted_at` is set to current timestamp
+- Active products are filtered using:
+
+```sql
 WHERE deleted_at IS NULL
+```
 
+---
 
-Restore functionality sets deleted_at back to NULL unless the product was deleted more than 30 days ago.
+# 🔄 Restore Logic
+
+- Restore sets `deleted_at = NULL`
+- Restore allowed only within **30 days**
+- Database trigger blocks restore after 30 days
+
+This enforces business rules directly at the database level.
+
+---
+
+# ⭐ Key Features
+
+- Clean reusable React table component
+- Proper RESTful API structure
+- Soft delete implementation
+- MySQL trigger for business rule enforcement
+- Clear separation of frontend and backend
+
+---
+
+## 👨‍💻 Author
+
+**Hari Baskar**
+
+---
+
